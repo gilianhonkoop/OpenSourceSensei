@@ -1,0 +1,276 @@
+actent: 0.0003
+actor:
+  act: silu
+  fan: avg
+  inputs: [deter, stoch]
+  layers: 3
+  maxstd: 1.0
+  minstd: 0.1
+  norm: layer
+  outnorm: false
+  outscale: 1.0
+  symlog_inputs: false
+  unimix: 0.01
+  units: 640
+  winit: normal
+actor_dist_cont: normal
+actor_dist_disc: onehot
+actor_grad_cont: backprop
+actor_grad_disc: reinforce
+actor_opt: {clip: 100.0, eps: 1e-05, lateclip: 0.0, lr: 3e-05, opt: adam, warmup: 0,
+  wd: 0.0}
+add_reward_heads: [motif_reward, rew_open_slide, rew_open_slide_easy, rew_open_drawer,
+  rew_open_drawer_medium, rew_open_drawer_easy, rew_push_green, rew_stack, rew_upright_block_off_table,
+  rew_flat_block_in_bin, rew_flat_block_in_shelf, rew_lift_upright_block, rew_lift_ball]
+add_reward_loss_scale: 1.0
+batch_length: 64
+batch_size: 16
+cluster: local
+cont_head:
+  act: silu
+  dist: binary
+  fan: avg
+  inputs: [deter, stoch]
+  layers: 3
+  norm: layer
+  outnorm: false
+  outscale: 1.0
+  units: 640
+  winit: normal
+copy_checkpoint: ''
+copy_others: ''
+copy_replay: ''
+critic:
+  act: silu
+  bins: 255
+  dist: symlog_disc
+  fan: avg
+  inputs: [deter, stoch]
+  layers: 3
+  norm: layer
+  outnorm: false
+  outscale: 0.0
+  symlog_inputs: false
+  units: 640
+  winit: normal
+critic_opt: {clip: 100.0, eps: 1e-05, lateclip: 0.0, lr: 3e-05, opt: adam, warmup: 0,
+  wd: 0.0}
+critic_slowreg: logprob
+critic_type: vfunction
+data_loaders: 8
+decoder:
+  act: silu
+  cnn: resnet
+  cnn_blocks: 0
+  cnn_depth: 48
+  cnn_keys: image
+  cnn_sigmoid: false
+  fan: avg
+  image_dist: mse
+  inputs: [deter, stoch]
+  minres: 4
+  mlp_keys: $^
+  mlp_layers: 5
+  mlp_units: 1024
+  norm: layer
+  outscale: 1.0
+  resize: stride
+  vector_dist: symlog_mse
+  winit: normal
+disag_head:
+  act: silu
+  dist: mse
+  fan: avg
+  inputs: [deter, stoch, action]
+  layers: 3
+  norm: layer
+  outscale: 1.0
+  units: 640
+  winit: normal
+disag_models: 8
+disag_target: [stoch]
+dyn_loss: {free: 1.0, impl: kl}
+encoder: {act: silu, cnn: resnet, cnn_blocks: 0, cnn_depth: 48, cnn_keys: image, fan: avg,
+  minres: 4, mlp_keys: $^, mlp_layers: 5, mlp_units: 1024, norm: layer, resize: stride,
+  symlog_inputs: true, winit: normal}
+env:
+  atari:
+    actions: all
+    gray: false
+    lives: unused
+    noops: 0
+    repeat: 4
+    resize: opencv
+    size: [64, 64]
+    sticky: true
+  crafter: {hr_image: false, log_glyphs: false, log_inventory: false, outdir: None}
+  dmc:
+    camera: -1
+    repeat: 2
+    size: [64, 64]
+  dmlab:
+    episodic: true
+    repeat: 4
+    size: [64, 64]
+  loconav:
+    camera: -1
+    repeat: 2
+    size: [64, 64]
+  minecraft:
+    break_speed: 100.0
+    size: [64, 64]
+  minihack:
+    autopickup: true
+    max_episode_steps: 800
+    obs_crop_h: 5
+    obs_crop_w: 5
+    remap_staircase: true
+    remap_to_tourist: true
+    restrict_actions: true
+    size: [64, 64]
+  motifminihack:
+    autopickup: true
+    clipping_max: 100
+    clipping_min: -100
+    deriv_ema_alpha: 0.09
+    deriv_scaling: false
+    deriv_scaling_alpha: 3.5
+    max_episode_steps: 800
+    model_cpt_id: '49'
+    motif_model_dir: /motif/trained_motif_networks/pokemon_gen1/minihack_keyroom
+    obs_crop_h: 5
+    obs_crop_w: 5
+    remap_staircase: true
+    remap_to_tourist: true
+    restrict_actions: true
+    size: [64, 64]
+    sliding_avg: 0
+  motifpokemon:
+    clipping_max: 100
+    clipping_min: -100
+    deriv_ema_alpha: 0.09
+    deriv_scaling: false
+    deriv_scaling_alpha: 3.5
+    expl_scale: 0.1
+    frame_skip: 96
+    img_size: [64, 64]
+    max_steps: 10000
+    mode: train
+    model_cpt_id: '49'
+    motif_model_dir: /motif/trained_motif_networks/pokemon_gen1/
+    outdir: ''
+    rom_path: pokemon_emulator/PokemonRed.gb
+    save_imgs: true
+    sliding_avg: 0
+    state_path: pokemon_emulator/has_pokedex_nballs.state
+  motifrobodesk: {camera: right, clipping_max: 200, clipping_min: -200, deriv_ema_alpha: 0.09,
+    deriv_scaling: false, deriv_scaling_alpha: 3.5, length: 500, log_all_rewards: true,
+    mode: train, model_cpt_id: '3', motif_model_dir: 
+      /home/cgumbsc/hdd/deepl2/sensei_group24/trained_motif_networks/reward_model_with_llava_anotation,
+    repeat: 2, sliding_avg: 0}
+  pokemon:
+    expl_scale: 0.1
+    frame_skip: 96
+    img_size: [64, 64]
+    max_steps: 10000
+    mode: train
+    outdir: ''
+    rom_path: pokemon_emulator/PokemonRed.gb
+    save_imgs: false
+    state_path: pokemon_emulator/has_pokedex_nballs.state
+  robodesk: {camera: right, length: 500, log_all_rewards: true, mode: train, repeat: 2}
+envs: {amount: 4, checks: false, discretize: 0, length: 0, parallel: process, reset: true,
+  restart: true}
+eval_dir: ''
+expl_behavior: Explore
+expl_opt: {clip: 100.0, eps: 1e-05, lr: 0.0001, opt: adam, warmup: 0, wd: 0.0}
+expl_reward_ops: sum
+expl_rewards: {disag: 1.0, extr: 0.0, vlm_reward: 0.1}
+expl_value_without_scale: false
+filter: .*
+grad_heads: [decoder, cont]
+horizon: 333
+imag_horizon: 15
+imag_unroll: false
+jax:
+  debug: false
+  debug_nans: false
+  jit: true
+  logical_cpus: 0
+  metrics_every: 10
+  platform: gpu
+  policy_devices: [0]
+  prealloc: true
+  precision: float16
+  train_devices: [0]
+logdir: /ivi/zfs/s0/original_homes/cgumbsc/sensei_logdir/sensei_group24/llava/seed12
+loss_scales: {actor: 1.0, cont: 1.0, critic: 1.0, dyn: 0.5, image: 1.0, rep: 0.1,
+  reward: 1.0, slowreg: 1.0, vector: 1.0}
+method: name
+min_max_stats: [none]
+model_opt: {clip: 1000.0, eps: 1e-08, lateclip: 0.0, lr: 0.0001, opt: adam, warmup: 0,
+  wd: 0.0}
+perc_based_scaling:
+  alt_scales: {disag: 0.0, extr: 0.0, vlm_reward: 1.0}
+  norm_by_alt: false
+  perc_key: vlm_reward
+  perc_scale: true
+  perc_threshold: 75.0
+rep_loss: {free: 1.0, impl: kl}
+replay: uniform
+replay_online: false
+replay_size: 1000000.0
+retnorm: {decay: 0.99, impl: perc_ema, max: 1.0, perchi: 95.0, perclo: 5.0}
+return_lambda: 0.95
+reward_head:
+  act: silu
+  bins: 255
+  dist: symlog_disc
+  fan: avg
+  inputs: [deter, stoch]
+  layers: 3
+  norm: layer
+  outnorm: false
+  outscale: 0.0
+  units: 640
+  winit: normal
+rssm: {act: silu, action_clip: 1.0, classes: 32, deter: 1024, fan: avg, initial: learned,
+  norm: layer, stoch: 32, unimix: 0.01, units: 640, unroll: false, winit: normal}
+run:
+  actor_addr: ipc:///tmp/5551
+  actor_batch: 32
+  eval_eps: 1
+  eval_every: 10000.0
+  eval_fill: 0
+  eval_initial: true
+  eval_samples: 1
+  expl_until: 250000
+  from_checkpoint: ''
+  log_every: 1000
+  log_keys_max: ^$
+  log_keys_mean: motif_reward
+  log_keys_sum: ^rew_.*
+  log_keys_video: [image]
+  log_zeros: true
+  pretrain: 0
+  pretrain_only_wm: false
+  report_every: 10000
+  restart_every: 20000000000.0
+  save_every: 900
+  script: train_eval
+  steps: 250000.0
+  sync_every: 10
+  train_fill: 0
+  train_ratio: 512.0
+  video_every: -1
+seed: 12
+slow_critic_fraction: 0.02
+slow_critic_update: 1
+task: motifrobodesk_open_drawer_medium_sparse
+task_behavior: Greedy
+task_reward: reward
+use_wandb: true
+vlm_reward_key: motif_reward
+wandb: {entity: kusta-university-of-amsterdam, id: '', key: 6126d78a108c99e3c2786e903be63ac240051ca1,
+  offline: false, project: SENSEI, run_name: new_run}
+wrapper: {checks: false, discretize: 0, dummy_motif: false, length: 0, reset: true}
