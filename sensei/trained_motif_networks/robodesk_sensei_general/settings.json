@@ -1,0 +1,35 @@
+{
+    "dataset_dir": "/is/cluster/fast/csancaktar/sensei_datasets/robodesk/plan2explore_multiple_runs_contrastive_intersection_100k_general",
+    "device": "cuda:0",
+    "id": 35,
+    "preference_key": "preferences_gpt4",
+    "reward_model_params": {
+        "model_params": {
+            "encoder_params": {
+                "encoder_hidden_dim": 256,
+                "encoder_num_layers": 2,
+                "image_filter_max": 64,
+                "image_resolution": 224,
+                "normalize_inputs": false,
+                "resize_image": false,
+                "use_clip_embedding_left": false,
+                "use_clip_embedding_right": false,
+                "use_image": true,
+                "use_obs_vec": false
+            },
+            "param_init_gain": 1,
+            "param_initialization": "orthogonal"
+        },
+        "train_params": {
+            "batch_size": 32,
+            "learning_rate": 1e-05,
+            "num_epochs": 50,
+            "weight_decay": 0.0001
+        },
+        "training_params": {
+            "num_epochs": 50
+        }
+    },
+    "seed": 97,
+    "working_dir": "/is/cluster/fast/csancaktar/results/motif/robodesk_p2e_data/grid_robodesk_generalprompt_gpt4/working_directories/35"
+}

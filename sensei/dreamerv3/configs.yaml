@@ -1,0 +1,1154 @@
+defaults:
+  seed: 0
+  method: name
+  task: dummy_disc
+  logdir: /dev/null
+  replay: uniform
+  replay_size: 1e6
+  replay_online: False
+  eval_dir: ""
+  filter: ".*"
+
+  cluster: "local"
+
+  jax:
+    platform: gpu
+    jit: True
+    precision: float16
+    prealloc: True
+    debug_nans: False
+    logical_cpus: 0
+    debug: False
+    policy_devices: [0]
+    train_devices: [0]
+    metrics_every: 10
+
+  run:
+    script: train
+    steps: 1e10
+    expl_until: 0
+    log_every: 300
+    report_every: 300
+    video_every: -1
+    save_every: 900
+    eval_every: 1e6
+    restart_every: 2e10
+    eval_initial: True
+    eval_eps: 1
+    eval_samples: 1
+    train_ratio: 32.0
+    train_fill: 0
+    eval_fill: 0
+    log_zeros: False
+    log_keys_video: [image]
+    log_keys_sum: "^$"
+    log_keys_mean: "(log_entropy)"
+    log_keys_max: "^$"
+    from_checkpoint: ""
+    sync_every: 10
+    # actor_addr: 'tcp://127.0.0.1:5551'
+    actor_addr: "ipc:///tmp/5551"
+    actor_batch: 32
+    pretrain: 0
+    pretrain_only_wm: False
+
+  envs:
+    {
+      amount: 4,
+      parallel: process,
+      length: 0,
+      reset: True,
+      restart: True,
+      discretize: 0,
+      checks: False,
+    }
+  wrapper:
+    { length: 0, reset: True, discretize: 0, checks: False, dummy_motif: False }
+  env:
+    atari:
+      {
+        size: [64, 64],
+        repeat: 4,
+        sticky: True,
+        gray: False,
+        actions: all,
+        lives: unused,
+        noops: 0,
+        resize: opencv,
+      }
+    dmlab: { size: [64, 64], repeat: 4, episodic: True }
+    minecraft: { size: [64, 64], break_speed: 100.0 }
+    crafter:
+      { outdir: None, log_inventory: False, hr_image: False, log_glyphs: False }
+    dmc: { size: [64, 64], repeat: 2, camera: -1 }
+    loconav: { size: [64, 64], repeat: 2, camera: -1 }
+    robodesk:
+      {
+        mode: "train",
+        repeat: 2,
+        length: 500,
+        camera: "right",
+        log_all_rewards: True,
+      }
+    motifrobodesk: {
+        mode: "train",
+        repeat: 2,
+        length: 500,
+        camera: "right",
+        log_all_rewards: True,
+        sliding_avg: 0,
+        deriv_scaling: False,
+        deriv_ema_alpha: 0.09,
+        deriv_scaling_alpha: 3.5,
+        clipping_min: -200,
+        clipping_max: 200,
+
+        # NOTE : change path to where this folder is on your machine
+
+        # For SENSEI with GPT
+        motif_model_dir: "PATHtoFOLDER/sensei/trained_motif_networks/robodesk_sensei_general",
+        model_cpt_id: "28",
+        # For Sensei with LLAVA
+        # motif_model_dir: "PATHtoFOLDER/sensei/trained_motif_networks/reward_model_with_llava_anotation",
+        # model_cpt_id: "3",
+      }
+    minihack:
+      {
+        size: [64, 64],
+        obs_crop_h: 5,
+        obs_crop_w: 5,
+        remap_to_tourist: True,
+        remap_staircase: True,
+        restrict_actions: True,
+        autopickup: True,
+        max_episode_steps: 800,
+      }
+    motifminihack:
+      {
+        size: [64, 64],
+        obs_crop_h: 5,
+        obs_crop_w: 5,
+        remap_to_tourist: True,
+        remap_staircase: True,
+        restrict_actions: True,
+        autopickup: True,
+        max_episode_steps: 800,
+        sliding_avg: 0,
+        deriv_scaling: False,
+        deriv_ema_alpha: 0.09,
+        deriv_scaling_alpha: 3.5,
+        clipping_min: -100,
+        clipping_max: 100,
+        motif_model_dir: "/motif/trained_motif_networks/pokemon_gen1/minihack_keyroom",
+        model_cpt_id: "49",
+      }
+    pokemon:
+      {
+        rom_path: "pokemon_emulator/PokemonRed.gb",
+        state_path: "pokemon_emulator/has_pokedex_nballs.state",
+        img_size: [64, 64],
+        frame_skip: 96,
+        expl_scale: 0.1,
+        max_steps: 10000,
+        outdir: "",
+        save_imgs: False,
+        mode: "train",
+      }
+    motifpokemon:
+      {
+        rom_path: "pokemon_emulator/PokemonRed.gb",
+        state_path: "pokemon_emulator/has_pokedex_nballs.state",
+        img_size: [64, 64],
+        frame_skip: 96,
+        expl_scale: 0.1,
+        max_steps: 10000,
+        outdir: "",
+        save_imgs: True,
+        mode: "train",
+        sliding_avg: 0,
+        deriv_scaling: False,
+        deriv_ema_alpha: 0.09,
+        deriv_scaling_alpha: 3.5,
+        clipping_min: -100,
+        clipping_max: 100,
+        model_cpt_id: "49",
+        motif_model_dir: "/motif/trained_motif_networks/pokemon_gen1/",
+      }
+
+  use_wandb: False
+  wandb:
+    key: KEY HERE
+    entity: "ENTITY HERE"
+    run_name: "RUN NAME HERE"
+    project: "PROJECT NAME HERE"
+    id: ""
+    offline: False
+
+  copy_checkpoint: ""
+  copy_replay: ""
+  copy_others: ""
+
+  # Agent
+  task_behavior: Greedy
+  task_reward: "reward"
+  # NOTE : I changed this from none to explore like you said in the mail
+  expl_behavior: Explore
+  batch_size: 16
+  batch_length: 64
+  data_loaders: 8
+
+  # World Model
+  grad_heads: [decoder, reward, cont]
+  rssm:
+    {
+      deter: 4096,
+      units: 1024,
+      stoch: 32,
+      classes: 32,
+      act: silu,
+      norm: layer,
+      initial: learned,
+      unimix: 0.01,
+      unroll: False,
+      action_clip: 1.0,
+      winit: normal,
+      fan: avg,
+    }
+  encoder:
+    {
+      mlp_keys: ".*",
+      cnn_keys: ".*",
+      act: silu,
+      norm: layer,
+      mlp_layers: 5,
+      mlp_units: 1024,
+      cnn: resnet,
+      cnn_depth: 96,
+      cnn_blocks: 0,
+      resize: stride,
+      winit: normal,
+      fan: avg,
+      symlog_inputs: True,
+      minres: 4,
+    }
+  decoder:
+    {
+      mlp_keys: ".*",
+      cnn_keys: ".*",
+      act: silu,
+      norm: layer,
+      mlp_layers: 5,
+      mlp_units: 1024,
+      cnn: resnet,
+      cnn_depth: 96,
+      cnn_blocks: 0,
+      image_dist: mse,
+      vector_dist: symlog_mse,
+      inputs: [deter, stoch],
+      resize: stride,
+      winit: normal,
+      fan: avg,
+      outscale: 1.0,
+      minres: 4,
+      cnn_sigmoid: False,
+    }
+  reward_head:
+    {
+      layers: 5,
+      units: 1024,
+      act: silu,
+      norm: layer,
+      dist: symlog_disc,
+      outscale: 0.0,
+      outnorm: False,
+      inputs: [deter, stoch],
+      winit: normal,
+      fan: avg,
+      bins: 255,
+    }
+  cont_head:
+    {
+      layers: 5,
+      units: 1024,
+      act: silu,
+      norm: layer,
+      dist: binary,
+      outscale: 1.0,
+      outnorm: False,
+      inputs: [deter, stoch],
+      winit: normal,
+      fan: avg,
+    }
+  loss_scales:
+    {
+      image: 1.0,
+      vector: 1.0,
+      reward: 1.0,
+      cont: 1.0,
+      dyn: 0.5,
+      rep: 0.1,
+      actor: 1.0,
+      critic: 1.0,
+      slowreg: 1.0,
+    }
+  dyn_loss: { impl: kl, free: 1.0 }
+  rep_loss: { impl: kl, free: 1.0 }
+  model_opt:
+    {
+      opt: adam,
+      lr: 1e-4,
+      eps: 1e-8,
+      clip: 1000.0,
+      wd: 0.0,
+      warmup: 0,
+      lateclip: 0.0,
+    }
+
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["none"]
+  min_max_stats: ["none"]
+  add_reward_loss_scale: 1.0
+
+  # Actor Critic
+  actor:
+    {
+      layers: 5,
+      units: 1024,
+      act: silu,
+      norm: layer,
+      minstd: 0.1,
+      maxstd: 1.0,
+      outscale: 1.0,
+      outnorm: False,
+      unimix: 0.01,
+      inputs: [deter, stoch],
+      winit: normal,
+      fan: avg,
+      symlog_inputs: False,
+    }
+  critic:
+    {
+      layers: 5,
+      units: 1024,
+      act: silu,
+      norm: layer,
+      dist: symlog_disc,
+      outscale: 0.0,
+      outnorm: False,
+      inputs: [deter, stoch],
+      winit: normal,
+      fan: avg,
+      bins: 255,
+      symlog_inputs: False,
+    }
+  actor_opt:
+    {
+      opt: adam,
+      lr: 3e-5,
+      eps: 1e-5,
+      clip: 100.0,
+      wd: 0.0,
+      warmup: 0,
+      lateclip: 0.0,
+    }
+  critic_opt:
+    {
+      opt: adam,
+      lr: 3e-5,
+      eps: 1e-5,
+      clip: 100.0,
+      wd: 0.0,
+      warmup: 0,
+      lateclip: 0.0,
+    }
+  actor_dist_disc: onehot
+  actor_dist_cont: normal
+  actor_grad_disc: reinforce
+  actor_grad_cont: backprop
+  critic_type: vfunction
+  imag_horizon: 15
+  imag_unroll: False
+  horizon: 333
+  return_lambda: 0.95
+  critic_slowreg: logprob
+  slow_critic_update: 1
+  slow_critic_fraction: 0.02
+  retnorm: { impl: perc_ema, decay: 0.99, max: 1.0, perclo: 5.0, perchi: 95.0 }
+
+  actent: 3e-4
+
+  # Exploration
+  expl_rewards: { extr: 1.0, disag: 0.1, vlm_reward: 0.0 }
+  perc_based_scaling:
+    {
+      perc_scale: False,
+      perc_key: "vlm_reward",
+      perc_threshold: 75.0,
+      alt_scales: { disag: 0.0, vlm_reward: 1.0, extr: 0.0 },
+      norm_by_alt: False,
+    }
+  expl_opt: { opt: adam, lr: 1e-4, eps: 1e-5, clip: 100.0, wd: 0.0, warmup: 0 }
+  disag_head:
+    {
+      layers: 5,
+      units: 1024,
+      act: silu,
+      norm: layer,
+      dist: mse,
+      outscale: 1.0,
+      inputs: [deter, stoch, action],
+      winit: normal,
+      fan: avg,
+    }
+  disag_target: [stoch]
+  disag_models: 8
+  expl_reward_ops: "sum" # vs. "multi"
+  expl_value_without_scale: False
+
+minecraft:
+  task: minecraft_diamond
+  envs.amount: 16
+  run:
+    script: train_save
+    eval_fill: 1e5
+    train_ratio: 16
+    log_keys_max: "^log_inventory.*"
+  encoder:
+    {
+      mlp_keys: "inventory|inventory_max|equipped|health|hunger|breath|reward",
+      cnn_keys: "image",
+    }
+  decoder:
+    {
+      mlp_keys: "inventory|inventory_max|equipped|health|hunger|breath",
+      cnn_keys: "image",
+    }
+
+dmlab:
+  task: dmlab_explore_goal_locations_small
+  envs.amount: 8
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+  run.train_ratio: 64
+
+atari:
+  task: atari_pong
+  envs.amount: 8
+  run:
+    steps: 5.5e7
+    eval_eps: 10
+    train_ratio: 64
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+atari100k:
+  task: atari_pong
+  envs: { amount: 1 }
+  env.atari:
+    { gray: False, repeat: 4, sticky: False, noops: 30, actions: needed }
+  run:
+    script: train_eval
+    steps: 1.5e5
+    eval_every: 1e5
+    eval_initial: False
+    eval_eps: 100
+    train_ratio: 1024
+  jax.precision: float32
+  rssm.deter: 512
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units$: 512
+  actor_eval_sample: True
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+crafter:
+  task: crafter_reward
+  envs.amount: 1
+  run:
+    log_keys_max: "^log_achievement_.*"
+    log_keys_sum: "^log_reward$"
+  run.train_ratio: 512
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+dmc_vision:
+  task: dmc_walker_walk
+  run.train_ratio: 512
+  rssm.deter: 512
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+robodesk:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_.*"
+    log_zeros: True
+  task: robodesk_open_drawer_medium_sparse
+  run.train_ratio: 512
+  rssm.deter: 1024 # M
+  .*\.cnn_depth: 48
+  .*\.units: 640
+  .*\.layers: 3
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+robodesk_p2x:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_.*"
+    log_zeros: True
+    expl_until: 2e6
+  expl_behavior: "Explore"
+  grad_heads: [decoder, cont]
+  task: robodesk_open_drawer_medium_sparse
+  expl_rewards.disag: 1.0
+  expl_rewards.vlm_reward: 0.0
+  expl_rewards.extr: 0.0
+  run.train_ratio: 512
+  rssm.deter: 1024 # M
+  .*\.cnn_depth: 48
+  .*\.units: 640
+  .*\.layers: 3
+  add_reward_heads:
+    [
+      "rew_open_slide",
+      "rew_open_slide_easy",
+      "rew_open_drawer",
+      "rew_open_drawer_medium",
+      "rew_open_drawer_easy",
+      "rew_push_green",
+      "rew_stack",
+      "rew_upright_block_off_table",
+      "rew_flat_block_in_bin",
+      "rew_flat_block_in_shelf",
+      "rew_lift_upright_block",
+      "rew_lift_ball",
+    ]
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+robodesk_sensei_general:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_.*"
+    log_keys_mean: "motif_reward"
+    log_zeros: True
+    expl_until: 2e6
+  grad_heads: [decoder, cont]
+  task: motifrobodesk_open_drawer_medium_sparse
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.1 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 75.0,
+      alt_scales: { disag: 0.0, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads:
+    [
+      "motif_reward",
+      "rew_open_slide",
+      "rew_open_slide_easy",
+      "rew_open_drawer",
+      "rew_open_drawer_medium",
+      "rew_open_drawer_easy",
+      "rew_push_green",
+      "rew_stack",
+      "rew_upright_block_off_table",
+      "rew_flat_block_in_bin",
+      "rew_flat_block_in_shelf",
+      "rew_lift_upright_block",
+      "rew_lift_ball",
+    ]
+  run.train_ratio: 512
+  rssm.deter: 1024 # M
+  .*\.cnn_depth: 48
+  .*\.units: 640
+  .*\.layers: 3
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+robodesk_sensei:
+  run:
+    script: train_eval
+    eval_every: 1e4
+    steps: 2.5e6
+    report_every: 1e4
+    log_every: 1e3
+    log_keys_sum: "^rew_.*"
+    log_keys_mean: "motif_reward"
+    log_zeros: True
+    expl_until: 2.5e5
+  grad_heads: [decoder, cont]
+  task: motifrobodesk_open_drawer_medium_sparse
+  env.motifrobodesk: {
+      # NOTE : change path to where this folder is on your PC
+
+      # For SENSEI in Robodesk:
+      motif_model_dir: "PATHtoFOLDER/sensei/trained_motif_networks/robodesk_intersection_p2e_gpt",
+      model_cpt_id: "15",
+      # For Sensei with LLAVA
+      # motif_model_dir: "PATHtoFOLDER/sensei/trained_motif_networks/reward_model_with_llava_anotation",
+      # model_cpt_id: "3",
+    }
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.1 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 75.0,
+      alt_scales: { disag: 0.0, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads:
+    [
+      "motif_reward",
+      "rew_open_slide",
+      "rew_open_slide_easy",
+      "rew_open_drawer",
+      "rew_open_drawer_medium",
+      "rew_open_drawer_easy",
+      "rew_push_green",
+      "rew_stack",
+      "rew_upright_block_off_table",
+      "rew_flat_block_in_bin",
+      "rew_flat_block_in_shelf",
+      "rew_lift_upright_block",
+      "rew_lift_ball",
+    ]
+  run.train_ratio: 512
+  rssm.deter: 1024 # M
+  .*\.cnn_depth: 48
+  .*\.units: 640
+  .*\.layers: 3
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+
+minihack:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_int_.*"
+  task: minihack_KeyRoom-S15
+  grad_heads: [decoder, cont]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.minihack:
+    {
+      restrict_actions: False,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 600,
+    }
+
+minihack_p2x_keyroom:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyRoom-S15
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.0 }
+  grad_heads: [decoder, cont]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.minihack:
+    {
+      restrict_actions: False,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 600,
+    }
+
+minihack_p2x_keychest:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyChestCorridor-S4
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.0 }
+  grad_heads: [decoder, cont]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.minihack:
+    {
+      restrict_actions: True,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 800,
+    }
+
+minihack_sensei_keyroom:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    expl_until: 5e5
+    steps: 5e5
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_mean: "motif_reward"
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyRoom-S15
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.3 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 90.0,
+      alt_scales: { disag: 0.1, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["motif_reward"]
+  grad_heads: [decoder, cont]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.motifminihack:
+    {
+      restrict_actions: False,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 600,
+    }
+
+minihack_sensei_keychest:
+  run:
+    script: train_eval
+    eval_every: 5e4
+    expl_until: 5e5
+    steps: 5e5
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_mean: "motif_reward"
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyChestCorridor-S4
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.25 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 90.0,
+      alt_scales: { disag: 0.05, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["motif_reward"]
+  grad_heads: [decoder, cont]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.motifminihack:
+    {
+      restrict_actions: True,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 800,
+      motif_model_dir: "/motif/trained_motif_networks/pokemon_gen1/minihack_keychest",
+    }
+
+minihack_sensei_keyroom_extr: # run after exploration
+  copy_replay: "None"
+  run:
+    script: train_eval
+    eval_every: 1e4
+    expl_until: 5e5
+    steps: 1.5e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_mean: "motif_reward"
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyRoom-S15
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.3 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 90.0,
+      alt_scales: { disag: 0.1, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["motif_reward"]
+  grad_heads: [decoder, cont, reward]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.motifminihack:
+    {
+      restrict_actions: False,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 600,
+    }
+
+minihack_sensei_keychest_extr: # run after exploration
+  copy_replay: "None"
+  run:
+    script: train_eval
+    eval_every: 1e4
+    expl_until: 5e5
+    steps: 1.5e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_mean: "motif_reward"
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyChestCorridor-S4
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.25 }
+  perc_based_scaling:
+    {
+      perc_scale: True,
+      perc_key: "vlm_reward",
+      perc_threshold: 90.0,
+      alt_scales: { disag: 0.05, vlm_reward: 1.0, extr: 0.0 },
+    }
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["motif_reward"]
+  grad_heads: [decoder, cont, reward]
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.motifminihack:
+    {
+      restrict_actions: True,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 800,
+      motif_model_dir: "/motif/trained_motif_networks/pokemon_gen1/minihack_keychest",
+    }
+
+minihack_p2x_keyroom_extr: # run after exploration
+  copy_replay: "None"
+  grad_heads: [decoder, cont, reward]
+  run:
+    script: train_eval
+    eval_every: 1e4
+    steps: 1.5e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyRoom-S15
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.0 }
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.minihack:
+    {
+      restrict_actions: False,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 600,
+    }
+
+minihack_p2x_keychest_extr: # run after exploration
+  copy_replay: "None"
+  grad_heads: [decoder, cont, reward]
+  run:
+    script: train_eval
+    eval_every: 1e4
+    steps: 1e6
+    report_every: 5e4
+    log_every: 5e3
+    log_keys_sum: "^rew_int_.*"
+  task: motifminihack_KeyChestCorridor-S4
+  expl_behavior: "Explore"
+  expl_rewards: { extr: 0.0, disag: 1.0, vlm_reward: 0.0 }
+  run.train_ratio: 512
+  rssm.deter: 512 # S
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: "key_in_inv", cnn_keys: "image" }
+  decoder: { mlp_keys: "key_in_inv", cnn_keys: "image", vector_dist: binary }
+  env.minihack:
+    {
+      restrict_actions: True,
+      autopickup: True,
+      remap_staircase: True,
+      max_episode_steps: 800,
+    }
+
+pokemon_dreamer:
+  task: pokemon_red
+  envs.amount: 1
+  run:
+    log_keys_max: "^log_.*"
+    log_zeros: True
+    eval_every: 5e4
+    train_ratio: 512
+    report_every: 3e4
+    video_every: 3e4
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+  rssm.deter: 2048 # L
+  .*\.cnn_depth: 64
+  .*\.units: 768
+  .*\.layers: 4
+  run.steps: 2.5e5
+  run.expl_until: 1e10
+  expl_behavior: "Greedy"
+  env.pokemon.max_steps: 1000 # TODO manually increase
+
+pokemon_p2x:
+  task: pokemon_red
+  envs.amount: 1
+  run:
+    log_keys_max: "^log_.*"
+    log_zeros: True
+    eval_every: 5e4
+    train_ratio: 512
+    report_every: 3e4
+    video_every: 3e4
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+  rssm.deter: 2048 # L
+  .*\.cnn_depth: 64
+  .*\.units: 768
+  .*\.layers: 4
+  expl_rewards.disag: 1.0
+  expl_rewards.vlm_reward: 0.0
+  expl_rewards.extr: 1.0
+  run.steps: 2.5e5
+  run.expl_until: 1e10
+  expl_behavior: "Explore"
+  env.pokemon.max_steps: 1000 # TODO manually increase
+
+pokemon_motif:
+  task: motifpokemon_red
+  envs.amount: 1
+  env.motifpokemon.save_imgs: True
+  run:
+    log_keys_max: "^log_.*"
+    log_keys_mean: "motif_reward"
+    log_zeros: True
+    eval_every: 5e4
+    train_ratio: 512
+    report_every: 3e4
+    video_every: 3e4
+    log_keys_video: [image, motif_reward]
+  encoder: { mlp_keys: "$^", cnn_keys: "image" }
+  decoder: { mlp_keys: "$^", cnn_keys: "image" }
+  rssm.deter: 2048 # L
+  .*\.cnn_depth: 64
+  .*\.units: 768
+  .*\.layers: 4
+  expl_rewards.disag: 0.5
+  expl_rewards.vlm_reward: 1.0
+  expl_rewards.extr: 1.0
+  run.steps: 2.5e5
+  run.expl_until: 1e10
+  expl_behavior: "Explore"
+  vlm_reward_key: "motif_reward"
+  add_reward_heads: ["motif_reward"]
+  env.motifpokemon.max_steps: 1000 # TODO manually increase
+  perc_based_scaling:
+    perc_scale: True
+    perc_key: "vlm_reward"
+    perc_threshold: 75.0
+    alt_scales: { disag: 0.5, vlm_reward: 1.0, extr: 1.0 }
+    norm_by_alt: True
+
+dmc_proprio:
+  task: dmc_walker_walk
+  run.train_ratio: 512
+  rssm.deter: 512
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+  encoder: { mlp_keys: ".*", cnn_keys: "$^" }
+  decoder: { mlp_keys: ".*", cnn_keys: "$^" }
+
+bsuite:
+  task: bsuite_mnist/0
+  envs: { amount: 1, parallel: none }
+  run:
+    script: train
+    train_ratio: 1024 # 128 for cartpole
+  rssm.deter: 512
+  .*\.cnn_depth: 32
+  .*\.layers: 2
+  .*\.units: 512
+
+loconav:
+  task: loconav_ant_maze_m
+  env.loconav.repeat: 2
+  run:
+    train_ratio: 512
+    log_keys_max: "^log_.*"
+  encoder: { mlp_keys: ".*", cnn_keys: "image" }
+  decoder: { mlp_keys: ".*", cnn_keys: "image" }
+
+small:
+  rssm.deter: 512
+  .*\.cnn_depth: 32
+  .*\.units: 512
+  .*\.layers: 2
+
+medium:
+  rssm.deter: 1024
+  .*\.cnn_depth: 48
+  .*\.units: 640
+  .*\.layers: 3
+
+large:
+  rssm.deter: 2048
+  .*\.cnn_depth: 64
+  .*\.units: 768
+  .*\.layers: 4
+
+xlarge:
+  rssm.deter: 4096
+  .*\.cnn_depth: 96
+  .*\.units: 1024
+  .*\.layers: 5
+
+multicpu:
+  jax:
+    logical_cpus: 8
+    policy_devices: [0, 1]
+    train_devices: [2, 3, 4, 5, 6, 7]
+  run:
+    actor_batch: 4
+  envs:
+    amount: 8
+  batch_size: 12
+  batch_length: 10
+
+debug:
+  jax: { jit: True, prealloc: False, debug: True, platform: cpu }
+  envs: { restart: False, amount: 3 }
+  wrapper: { length: 100, checks: True }
+  run:
+    eval_every: 1000
+    log_every: 5
+    save_every: 10
+    train_ratio: 32
+    actor_batch: 2
+  batch_size: 8
+  batch_length: 12
+  replay_size: 1e5
+  encoder.cnn_depth: 8
+  decoder.cnn_depth: 8
+  rssm: { deter: 32, units: 16, stoch: 4, classes: 4 }
+  .*unroll: False
+  .*\.layers: 2
+  .*\.units: 16
+  .*\.wd$: 0.0
+
+mydebug:
+  cluster: "local"
+  jax: { jit: True, prealloc: False, debug: False, platform: cpu }
+  envs: { restart: False, amount: 1 }
+  wrapper: { length: 100, checks: False }
+  wandb.key: KEY HERE
+  wandb.entity: "ENTITY HERE"
+  wandb.run_name: "RUN NAME HERE"
+  wandb.project: "PROJECT NAME HERE"
+  run:
+    eval_every: 1000
+    log_every: 5
+    save_every: 10
+    train_ratio: 32
+    actor_batch: 2
+    steps: 1e4
+  batch_size: 8
+  batch_length: 12
+  replay_size: 1e5
+  encoder.cnn_depth: 8
+  decoder.cnn_depth: 8
+  rssm: { deter: 32, units: 16, stoch: 4, classes: 4 }
+  .*unroll: False
+  .*\.layers: 2
+  .*\.units: 16
+  .*\.wd$: 0.0
+
+debug_gpu:
+  cluster: "uni"
+  wandb.key: KEY HERE
+  wandb.entity: "ENTITY HERE"
+  wandb.run_name: "RUN NAME HERE"
+  wandb.project: "PROJECT NAME HERE"
+  jax: { jit: True, prealloc: False, debug: False, platform: gpu }
+  wrapper: { length: 100, checks: False }
+  envs: { restart: False, amount: 1 }
+  run:
+    eval_every: 1000
+    log_every: 5
+    save_every: 10
+    train_ratio: 32
+    actor_batch: 2
+    steps: 1e4
+  batch_size: 8
+  batch_length: 12
+  replay_size: 1e5
+  encoder.cnn_depth: 8
+  decoder.cnn_depth: 8
+  rssm: { deter: 32, units: 16, stoch: 4, classes: 4 }
+  .*unroll: False
+  .*\.layers: 2
+  .*\.units: 16
+  .*\.wd$: 0.0
