@@ -38,6 +38,16 @@ The model proposed in the paper current only utilizes the GPT-4 model as VLM. Th
 
 #### Gilian
 
+My main focus during this project was adapting and using the previous Sensei Dreamer codebase for our project. This involved resolving pip-package
+version mismatches and outdated cuda drivers, fixing bugs in the previous code and actually running the dreamer agent with the new distilled reward
+function, Apart from this, I also created the layout / setup for the Read.me file. Additionally, I trimmed and refined the previous SENSEI codebase so
+that it can be included in our new public github repository.
+
+Other deliverables for this course, such as the project proposal, project draft, project presenta-
+tion and the final report version were split up equally between our group members. For these deliverables, my main focus was the method and results,
+but I also tried to coordinate individual parts from members, e.g. our initial project proposal (before handing it in) had a lot of overlap
+between the parts each member wrote.
+
 # Codebase
 
 This codebase is comprised of two main components: `SENSEI` and `Motif`, each contained in their respective folders. Results for this experiment are contained in the `logdir` folder.

@@ -5,4 +5,5 @@ MUJOCO_LOG.TXT
 gif*/
 *.png
 *.npz
-!/logidr/images/*
+!/logidr/images/
+!/logidr/images/*.png
