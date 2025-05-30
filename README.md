@@ -26,7 +26,18 @@ The model proposed in the paper current only utilizes the GPT-4 model as VLM. Th
 
 ## Results
 
+We used the Robodesk tabletop environment to assess the performance of SENSEI using LLaVA. We collected 100K image-pairs from prior Robodesk epsiodes, and annotated them for semantic interestingness using LLaVA. The image-pair annotations we obtained how a bias towards the first image, which is selected in about 80% of the cases. GPT-4 shows a moderate second-image bias, selecting it in about 60% of the cases. The contrast in choice of preferences is detailed in [image]. 
+
+We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance [see image 2]. 
+
+With the LLaVA-distilled agent, we observed approximately twice more drawer interactions compared to the GPT-4 baseline, indicating that the LLaVA is able to distill a reward function capable of guiding semantically meaningful behavior. However, there were noticably fewer interactions with objects other than the drawer, suggesting limited generalization beyond explicitly mentioned objects in the prompt. The overall behaviour thus demonstrates semantically meaningful exploration that is strongly driven by prompt content, but with narrower object focus. Differences in exploration between the smaller LLaVA model and the larger GPT-4 demonstrate a trade-off between model size and semantic generality. LLaVA yields a strong prompt-focused behavior, but less balanced interest across all objects.
+
 ## Conlusion
+
+Despite its smaller size, LLaVA enables a cost-efficient, fully open alternative to GPT-4 for semantic reward distillation within the SENSEI framework. The successful integration into DreamerV3 confirms that open-source VLMs can instill intrinsic "interestingness" for task-free RL exploration. LLaVa distilled reward function can successfuly guide the agent when concepts are clearly specified in the prompt. However, there appears to be a reduced object generalisation and annotation consistency compared to GPT-4, leading to skewed object interactions.
+
+Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Further, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environemnts (e.g. OpenAI Gym Atari suite) to assess generalizability. Lastly, the distilled reward functions should be thoroughly analyzed to understand the semantic discrepancies beyween open and closed VLM annotations.
+
 
 ## Individual contribution
 
@@ -35,6 +46,8 @@ The model proposed in the paper current only utilizes the GPT-4 model as VLM. Th
 #### Yitjun
 
 #### Urban
+
+
 
 #### Gilian
 
