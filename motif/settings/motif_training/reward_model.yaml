@@ -1,0 +1,24 @@
+reward_model_params:
+    model_params:
+        encoder_params:
+            encoder_num_layers: 2
+            encoder_hidden_dim: 512
+            use_obs_vec: false
+            use_clip_embedding_right: false
+            use_clip_embedding_left: false
+            use_image: true
+            resize_image: false
+            normalize_inputs: false
+            image_filter_max: 64
+        param_initialization: "orthogonal"
+        param_init_gain: 1
+    train_params:
+        weight_decay: 0
+        learning_rate: 0.00003
+        batch_size: 32
+        num_epochs: 50
+dataset_dir: "robodesk_data"
+preference_key: "preferences_llava"
+seed: 42
+working_dir: "results/reward_model_with_llava_anotation"
+device: "cuda:0"

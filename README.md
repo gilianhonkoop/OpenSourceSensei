@@ -69,6 +69,46 @@ This codebase is comprised of two main components: `SENSEI` and `Motif`, each co
 
 ### Motif
 
+1. Install and activate a new python3.8 conda env.
+```bash
+conda create -n motif_venv python=3.8
+```
+
+```bash
+conda activate motif_venv
+```
+
+For the following steps, make sure you are sourced inside the `motif_venv` conda env.
+
+2. Install torch with CUDA.
+```bash
+pip3 install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+```
+If you get errors, try: 
+```bash
+pip3 install --upgrade pip
+```
+
+3. To download robodesk:
+```bash
+pip3 install -U robodesk
+```
+
+4. Install supporting packages
+```bash
+pip3 install -r requirements.txt
+pip3 install -r requirements_training.txt
+```
+5. Install openai package for GPT4
+```bash
+pip3 install openai
+```
+
+6. The workflow is set up to work with cluster utils:
+```bash
+pip install "cluster_utils[runner]"
+```
+
 ### Sensei
 
 In order to install a conda environment containing all the necessary packages with specific versions, simply run the `install_env.sh` bash script. This will automatically create an environment called `sensei_env`.
@@ -79,15 +119,58 @@ Additionally, one can install ffmpeg (e.g. `sudo apt-get install ffmpeg`) in ord
 
 ## Running experiments
 
-### Motif
+### Annotating dataset with LLaVa
 
-#### Reward training
+In order to annotate the image pairs of the Robodesk dataset, run the following command:
+
+```bash
+python motif/annotate_preloaded_dataset.py settings/annotation/llava_annotation_small.yaml
+```
+
+However, ensure the following configurations are correct by completing these steps:
+1. Locate the YAML file: 
+
+Path: `settings/annotation/llava_annotation_small.yaml`
+
+2. Edit the YAML file to update these two paths:
+
+- Change the `dataset_dir` to the actual path of the Robodesk dataset.
+- Change the `working_dir` to your desired annotation output location.
+
+3. Save the YAML file.
+
+4. Repeat the annotation for each partition of the dataset by modifying `partition_idx` and rerunning the script.
+
+To obtain the Robodesk dataset contact the authors of this Github Repository.
+
+Run the notebook `barplot.ipynb` to obtain VLM preference distribution across annotations.
+
+#### Reward training with Motif
+
+In order to distill a reward function with Motif from the VLM annotations, run the following command:
+
+```bash
+python motif/train_reward.py settings/motif_training/reward_model.yaml
+```
+
+However, ensure the following configurations are correct by completing these steps:
+1. Locate the YAML file: 
+
+Path: `settings/motif_training/reward_model.yaml`
+
+2. Edit the YAML file to update these three paths:
+
+- Change the `dataset_dir` to the Robodesk folder.
+- Change the `preference_key` to one of the three VLM preference file: `preferences_gpt4`, `preferences_gpt4general`, or `preferences_llava`.
+- Change the `working_dir` to your desired reward function output location.
+
+3. Save the YAML file.
 
 ### Sensei
 
 We follow DreamerV3's code base for running experiments. In order to run Dreamer, one can use:
 
-```sh
+```bash
 python dreamerv3/train.py  --logdir ~/logdir/gpt/seed_42 --configs robodesk_sensei --seed 42
 ```
 

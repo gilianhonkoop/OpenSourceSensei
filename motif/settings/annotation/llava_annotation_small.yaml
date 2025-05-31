@@ -1,0 +1,19 @@
+annotator: "llava"
+annotator_params:
+    model_params:
+        model_path: "liuhaotian/llava-v1.5-7b"
+        load_in_8bit: false
+        save_img: true
+        image_concat_orient: "vertical"
+        image_concat_buffer: 28
+    sampling_params:
+        temperature: 0.6
+        top_p: 0.8
+        max_new_tokens: 1024
+dataset_dir: "/home/scur2659/motif_group24/robodesk_data"
+partition_size: 10000
+partition_idx: 0
+logging: true
+seed: 42
+device: "cuda:0"
+working_dir: "/home/scur2659/motif_group24/robodesk_data/llava_annotations"

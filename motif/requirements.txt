@@ -1,0 +1,2 @@
+-e git+https://github.com/martius-lab/smart-settings@85e42b2eff23c3ea1ddc544e8a1784841da64735#egg=smart_settings
+Pillow==9.5.0

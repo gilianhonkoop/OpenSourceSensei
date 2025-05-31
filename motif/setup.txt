@@ -1,0 +1,42 @@
+## This is the setup i have on cluster
+
+virtualenv motif_venv --python=python3.10
+
+pip3 install --upgrade pip
+
+# pip3 install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu118
+pip3 install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121
+
+# torch.cuda.is_available()
+
+pip3 install git+https://github.com/haotian-liu/LLaVA.git
+
+# IMPORTANT:
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:"/is/software/nvidia/cuda-12.1/lib64"
+
+# pip3 install git+https://github.com/martius-lab/smart-settings@85e42b2eff23c3ea1ddc544e8a1784841da64735#egg=smart_settings
+
+# pip3 install git+https://gitlab.tuebingen.mpg.de/mrolinek/cluster_utils.git
+
+# The different environments 
+
+pip3 install -U robodesk
+
+# pip3 install minihack
+
+# and then the Motif dependencies 
+
+pip3 install -r requirements_training.txt
+
+
+-- To make it work with Python 3.10 I had to do:
+
+pip install git+https://gitlab.tuebingen.mpg.de/mrolinek/cluster_utils.git
+pip install git+https://gitlab.tuebingen.mpg.de/mrolinek/cluster_utils.git@chris_experimental
+pip install ruamel.yaml==0.17.40
+
+
+====
+export PYTHONPATH="$PYTHONPATH:/home/csancaktar/Projects/motif/Projects/motif"
+
+export MUJOCO_GL=egl
