@@ -200,8 +200,14 @@ To run the code with W&B simply set `use_wandb: True`
 
 ## Acknowledgments
 
-the code for `motif` was developed based on the code base of [SENSEI](https://arxiv.org/pdf/2503.01584).
+The code for `motif` was developed based on the code base of [Motif](https://arxiv.org/pdf/2310.00166).
 
-The code for `sensei` was developed based on the code base of [DreamerV3](https://github.com/danijar/dreamerv3) and [SENSEI](https://arxiv.org/pdf/2503.01584).
+The code for `sensei` was developed based on the code base of [SENSEI](https://github.com/danijar/dreamerv3) and [SENSEI](https://arxiv.org/pdf/2503.01584).
 
 ## References
+
+Klissarov, M., D’Oro, P., Sodhani, S., Raileanu, R., Bacon, P.-L., Vincent, P., Zhang, A., & Henaff, M. (2023). *Motif: Intrinsic motivation from artificial intelligence feedback*. https://arxiv.org/pdf/2310.00166
+
+Sancaktar, C., Gumbsch, C., Zadaianchuk, A., Kolev, P., & Martius, G. (2024). *SENSEI: Semantic exploration guided by foundation models to learn versatile world models*. In Workshop on Training Agents with Foundation Models at RLC 2024. https://arxiv.org/pdf/2503.01584 
+
+
