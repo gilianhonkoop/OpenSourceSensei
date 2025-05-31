@@ -30,7 +30,7 @@ We used the Robodesk tabletop environment to assess the performance of SENSEI us
 
 ![image2](logdir/images/vlm_preference_distribution.png). 
 
-We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance, which is shown in the following figure:
+We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance. The results are shown in the following figure:
 
 ![image2](logdir/images/results.png). 
 
