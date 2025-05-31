@@ -202,7 +202,7 @@ To run the code with W&B simply set `use_wandb: True`
 
 The code for `motif` was developed based on the code base of [Motif](https://arxiv.org/pdf/2310.00166).
 
-The code for `sensei` was developed based on the code base of [SENSEI](https://github.com/danijar/dreamerv3) and [SENSEI](https://arxiv.org/pdf/2503.01584).
+The code for `sensei` was developed based on the code base of [DreamerV3](https://github.com/danijar/dreamerv3) and [SENSEI](https://arxiv.org/pdf/2503.01584).
 
 ## References
 
