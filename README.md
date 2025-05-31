@@ -40,7 +40,7 @@ With the LLaVA-distilled agent, we observed approximately twice more drawer inte
 
 Despite its smaller size, LLaVA enables a cost-efficient, fully open alternative to GPT-4 for semantic reward distillation within the SENSEI framework. The successful integration into DreamerV3 confirms that open-source VLMs can instill intrinsic "interestingness" for task-free RL exploration. LLaVa distilled reward function can successfully guide the agent when concepts are clearly specified in the prompt. However, there appears to be a reduced object generalization and an annotation bias compared to GPT-4, leading to skewed object interactions.
 
-Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Furthermore, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environments (e.g. OpenAI Gym Atari) to assess generalizability. Lastly, the distilled reward functions should be thoroughly analyzed to understand the semantic discrepancies between open and closed VLM annotations.
+Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Furthermore, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environments (e.g. OpenAI Gym Atari) to assess generalizability. Lastly, the hyperparameter settings could be experimented on to optimize reward function distillation.
 
 ## Individual contribution
 
