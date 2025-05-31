@@ -5,9 +5,9 @@
 This paper builds forth upon [SENSEI](https://arxiv.org/pdf/2503.01584). It covers a core challenge of Reinforcement Learning (RL), namely exploration. This is especially challenging when dealing with environments that have sparse or delayed rewards (Tang et al., 2017b; Hao et al., 2024). Using intrinsic motivation, agents can explore an environment without relying on external rewards. The recent RL framework SEmaNtically Sensible ExploratIon (SENSEI) incorporates this motivation by using vision-language models (VLMs) to provide semantic feedback (Sancaktar et al., 2024). This framework is comprised of three main parts. First, GPT-4 is used to annotate image pairs that show the agent interacting with its environment. Given the images and a prompt, the VLM can reflect its notion of 'interestingness', by stating which image is more interesting. As VLMs are trained on human data, it should theoretically reflect the human notion of interestingness. Second, the framework distills an intrinsic reward function from these annotations which can optimize exploration. Lastly, a Dreamer agent is used for task-free exploration of different environments. This exploration combines its world model with guidance from the distilled reward function to decidie its actions. The main focus of the research is to show that:
 
 - SENSEI can explore rich, semantically meaningful behaviors with few prerequisites.
-- SENSEI enables enable fast learning of downstream tasks through its learned world model .
+- SENSEI enables fast learning of downstream tasks through its learned world model.
 
-Maybe something about (from the OG paper)
+And to answer the following research questions:
 
 1. Does the distilled reward function Rψ from VLM anno-
    tations encourage interesting behavior?
@@ -26,28 +26,39 @@ The model proposed in the paper current only utilizes the GPT-4 model as VLM. Th
 
 ## Results
 
-We used the Robodesk tabletop environment to assess the performance of SENSEI using LLaVA. We collected 100K image-pairs from prior Robodesk epsiodes, and annotated them for semantic interestingness using LLaVA. The image-pair annotations we obtained how a bias towards the first image, which is selected in about 80% of the cases. GPT-4 shows a moderate second-image bias, selecting it in about 60% of the cases. The contrast in choice of preferences is detailed in [image]. 
+We used the Robodesk tabletop environment to assess the performance of SENSEI using LLaVA. We collected 100K image-pairs from prior Robodesk epsiodes, and annotated them for semantic interestingness using LLaVA. The image-pair annotations we obtained how a bias towards the first image, which is selected in about 80% of the cases. GPT-4 shows a moderate second-image bias, selecting it in about 60% of the cases. The contrast in choice of preferences is detailed in the following figure:
 
-We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance [see image 2]. 
+![image2](OpenSourceSensei/logdir/images/vlm_preference_distribution.png). 
+
+We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance, which is shown in the following figure:
+
+![image2](OpenSourceSensei/logdir/images/results.png). 
 
 With the LLaVA-distilled agent, we observed approximately twice more drawer interactions compared to the GPT-4 baseline, indicating that the LLaVA is able to distill a reward function capable of guiding semantically meaningful behavior. However, there were noticably fewer interactions with objects other than the drawer, suggesting limited generalization beyond explicitly mentioned objects in the prompt. The overall behaviour thus demonstrates semantically meaningful exploration that is strongly driven by prompt content, but with narrower object focus. Differences in exploration between the smaller LLaVA model and the larger GPT-4 demonstrate a trade-off between model size and semantic generality. LLaVA yields a strong prompt-focused behavior, but less balanced interest across all objects.
 
 ## Conlusion
 
-Despite its smaller size, LLaVA enables a cost-efficient, fully open alternative to GPT-4 for semantic reward distillation within the SENSEI framework. The successful integration into DreamerV3 confirms that open-source VLMs can instill intrinsic "interestingness" for task-free RL exploration. LLaVa distilled reward function can successfuly guide the agent when concepts are clearly specified in the prompt. However, there appears to be a reduced object generalisation and annotation consistency compared to GPT-4, leading to skewed object interactions.
+Despite its smaller size, LLaVA enables a cost-efficient, fully open alternative to GPT-4 for semantic reward distillation within the SENSEI framework. The successful integration into DreamerV3 confirms that open-source VLMs can instill intrinsic "interestingness" for task-free RL exploration. LLaVa distilled reward function can successfully guide the agent when concepts are clearly specified in the prompt. However, there appears to be a reduced object generalization and an annotation bias compared to GPT-4, leading to skewed object interactions.
 
-Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Further, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environemnts (e.g. OpenAI Gym Atari suite) to assess generalizability. Lastly, the distilled reward functions should be thoroughly analyzed to understand the semantic discrepancies beyween open and closed VLM annotations.
-
+Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Furthermore, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environments (e.g. OpenAI Gym Atari) to assess generalizability. Lastly, the distilled reward functions should be thoroughly analyzed to understand the semantic discrepancies between open and closed VLM annotations.
 
 ## Individual contribution
 
 #### Max
 
+During this project I made a lot of contributions, spanning across both technical and organizational aspects. First of all, during the entire project, I have taken the role of being the leader of the group. During our meetings I proposed and divided tasks among the members and took a leading role in organizing the content of our gatherings. I have also been the main contact person to communicate between the team and our supervisor Christian. Besides that I took on a big role in the writing part of the project. I wrote a major piece of the project proposal and adapted it to the feedback from Christian. Besides that I wrote the entire draft report together with Urban and also adapted it to Christian's feedback.
+
+When it comes to the technical aspects of the project, I have also made a handful of contributions. First of all I did extensive literature research about SENSEI and its relevant components being GPT-4, LLaVA, Motif and DreamerV3. But, I also educated myself about intrinsic motivation for RL in general. Of course, my teammates also did their own research. Besides that I took on the task of identifying all relevant files to replace GPT-4 with LLaVA and using image annotations to distill a reward function with Motif. Then, Yi Tjun and I took on the task of replacing GPT-4 with LLaVA by altering the code available in the Motif repository that was provided by our supervisor. At the same time, I took on the task to figure out how to distill a reward function using Motif in general, using GPT-4 image annotations that were also provided by Christian. After the previous two tasks were finally completed, I also generated the LLaVA image annotations and distilled them into a reward function together with Yi Tjun.
+
 #### Yitjun
+
+My main contribution was mostly on the technical aspect of the project. The main task I had was to adapt the Motif codebase to the open-source VLM LLaVa. Firstly, I did thorough literature research about the general structure of SENSEI to understand the connectivity with the Motif. In addition, I read the Motif paper to get a deeper insight about the Motif codebase itself. Afterwards, I started to set up the Motif codebase on Snellius and installed all the necessary packages needed for Motif and LLaVa in order to successfully execute the code. Max and I then took on the task by modifying the code in the Motif repository, provided by our supervisor, to replace GPT-4 with LLaVa. Furthermore, we also generated the LLaVa Image annotations (to obtain a dataset of preferences) and distilled them into a reward function. After completing these two tasks, I plotted the preference distribution across annotations for the three different VLMs (GPT-4, GPT-4 General, and LLaVa). Lastly, for the technical part, I cleaned up the Motif repository by removing all unnecessary files in the Motif repository and pushed the finalized code to Github.
+
+For the other deliverables, such as project proposal and presentation, we all contributed equally. For the final report, I primarily wrote the conclusion and future work sections. I also reviewed the entire report for technical, grammar and spelling errors, and provided feedback to my team members on their contributions. Finally, in the ReadMe file, I wrote the installation instructions for Motif, as well as the section on running experiments, explaining how to annotate the dataset with LLaVa and distill the reward function using Motif.
 
 #### Urban
 
-
+I made a lot of contributions in the deep learning 2 project, both in terms of coordinating, helping with the codebase and debugging, and writing. From the start, I made sure I understood the subject matter well, and looked into many possible extensions of the paper that we could take, taking into account the limited compute. I coordinated and met with our project supervisor Christian to collect the original SENSEI dataset (GPT-4 annotated image pairs) since it was too large to collect it online. Then, I helped map out the structure of the dataset (e.g. what the different labels meant, why there were sometimes three and sometimes four labels). I also together with Gilian tried to debug the cuda driver errors, ffmpeg errors, and compatibility issues. I also plotted the per-object interaction counts. Additionally, I actively coordinated with the team regarding what needs to be done, where help was needed, and served as a critical reviewer by proofreading the other team members' writing and suggested clarity improvements. Regarding the writing part, I contributed with all deliverables and wrote the entire draft report together with Max. Other deliverables for the course, such as the project proposal, project presentation, the final report version, and the readme file were equally divided between all group members. For those deliverables, my main focus was the introduction and previous work, and I also coordinated my work with the rest of the team, since some parts overlapped, especially in the presentation.
 
 #### Gilian
 
@@ -145,7 +156,7 @@ To obtain the Robodesk dataset contact the authors of this Github Repository.
 
 Run the notebook `barplot.ipynb` to obtain VLM preference distribution across annotations.
 
-#### Reward training with Motif
+#### Distilling Reward Function with Motif
 
 In order to distill a reward function with Motif from the VLM annotations, run the following command:
 
