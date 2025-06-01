@@ -67,10 +67,9 @@ version mismatches and outdated cuda drivers, fixing bugs in the previous code a
 function, Apart from this, I also created the layout / setup for the Read.me file. Additionally, I trimmed and refined the previous SENSEI codebase so
 that it can be included in our new public github repository.
 
-Other deliverables for this course, such as the project proposal, project draft, project presenta-
-tion and the final report version were split up equally between our group members. For these deliverables, my main focus was the method and results,
-but I also tried to coordinate individual parts from members, e.g. our initial project proposal (before handing it in) had a lot of overlap
-between the parts each member wrote.
+Other deliverables for this course, such as the project proposal, project presentation and the final report version were split up equally between our group members. For these deliverables, my main focus was the method and results.
+I also coordinated parts from the initial project proposal to make it a coherent proposal. This is because there was (before handing it in) a lot of overlap
+between the different sections each member wrote.
 
 # Codebase
 
