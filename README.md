@@ -1,6 +1,6 @@
 # Open-Source Reward Distillation for Semantic Exploration in SENSEI
 
-[View the PDF](docs/myfile.pdf)
+[View the PDF](docs/OpensourceSensei.pdf)
 
 ## Introduction
 
