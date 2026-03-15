@@ -1,4 +1,6 @@
-# SENSEI - Open source VLM
+# Open-Source Reward Distillation for Semantic Exploration in SENSEI
+
+[View the PDF](docs/myfile.pdf)
 
 ## Introduction
 
@@ -28,7 +30,7 @@ The model proposed in the paper current only utilizes the GPT-4 model as VLM. Th
 
 We used the Robodesk tabletop environment to assess the performance of SENSEI using LLaVA. We collected 100K image-pairs from prior Robodesk epsiodes, and annotated them for semantic interestingness using LLaVA. The image-pair annotations we obtained how a bias towards the first image, which is selected in about 80% of the cases. GPT-4 shows a moderate second-image bias, selecting it in about 60% of the cases. The contrast in choice of preferences is detailed in the following figure:
 
-![image2](logdir/images/vlm_preference_distribution.png) 
+![image2](logdir/images/vlm_preference_distribution.png)
 
 We successfully replicated the GPT-4 distilled baseline from the original SENSEI paper. The task-free Robodesk exploration (250K steps, 3 seeds), showed similar number of object interactions, with minor seed-related variance. The results are shown in the following figure:
 
@@ -51,6 +53,7 @@ This codebase is comprised of two main components: `SENSEI` and `Motif`, each co
 ### Motif
 
 1. Install and activate a new python3.8 conda env.
+
 ```bash
 conda create -n motif_venv python=3.8
 ```
@@ -62,30 +65,38 @@ conda activate motif_venv
 For the following steps, make sure you are sourced inside the `motif_venv` conda env.
 
 2. Install torch with CUDA.
+
 ```bash
 pip3 install torch==2.0.1+cu118 torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 ```
-If you get errors, try: 
+
+If you get errors, try:
+
 ```bash
 pip3 install --upgrade pip
 ```
 
 3. To download robodesk:
+
 ```bash
 pip3 install -U robodesk
 ```
 
 4. Install supporting packages
+
 ```bash
 pip3 install -r requirements.txt
 pip3 install -r requirements_training.txt
 ```
+
 5. Install openai package for GPT4
+
 ```bash
 pip3 install openai
 ```
 
 6. The workflow is set up to work with cluster utils:
+
 ```bash
 pip install "cluster_utils[runner]"
 ```
@@ -109,7 +120,8 @@ python motif/annotate_preloaded_dataset.py settings/annotation/llava_annotation_
 ```
 
 However, ensure the following configurations are correct by completing these steps:
-1. Locate the YAML file: 
+
+1. Locate the YAML file:
 
 Path: `settings/annotation/llava_annotation_small.yaml`
 
@@ -135,7 +147,8 @@ python motif/train_reward.py settings/motif_training/reward_model.yaml
 ```
 
 However, ensure the following configurations are correct by completing these steps:
-1. Locate the YAML file: 
+
+1. Locate the YAML file:
 
 Path: `settings/motif_training/reward_model.yaml`
 
@@ -176,8 +189,6 @@ The code for `sensei` was developed based on the code base of [DreamerV3](https:
 
 ## References
 
-Klissarov, M., D’Oro, P., Sodhani, S., Raileanu, R., Bacon, P.-L., Vincent, P., Zhang, A., & Henaff, M. (2023). *Motif: Intrinsic motivation from artificial intelligence feedback*. https://arxiv.org/pdf/2310.00166
+Klissarov, M., D’Oro, P., Sodhani, S., Raileanu, R., Bacon, P.-L., Vincent, P., Zhang, A., & Henaff, M. (2023). _Motif: Intrinsic motivation from artificial intelligence feedback_. https://arxiv.org/pdf/2310.00166
 
-Sancaktar, C., Gumbsch, C., Zadaianchuk, A., Kolev, P., & Martius, G. (2024). *SENSEI: Semantic exploration guided by foundation models to learn versatile world models*. In Workshop on Training Agents with Foundation Models at RLC 2024. https://arxiv.org/pdf/2503.01584 
-
-
+Sancaktar, C., Gumbsch, C., Zadaianchuk, A., Kolev, P., & Martius, G. (2024). _SENSEI: Semantic exploration guided by foundation models to learn versatile world models_. In Workshop on Training Agents with Foundation Models at RLC 2024. https://arxiv.org/pdf/2503.01584
