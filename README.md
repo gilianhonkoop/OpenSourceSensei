@@ -42,35 +42,6 @@ Despite its smaller size, LLaVA enables a cost-efficient, fully open alternative
 
 Future work should focus on exploring more advanced open-source VLMs (e.g. LLaVA-Next) to improve annotation balance and reduce prompt bias. Furthermore, the prompt should be refined to encourage broader object coverage. The results should be validated across diverse environments (e.g. OpenAI Gym Atari) to assess generalizability. Lastly, the hyperparameter settings could be experimented on to optimize reward function distillation.
 
-## Individual contribution
-
-#### Max
-
-During this project I made a lot of contributions, spanning across both technical and organizational aspects. First of all, during the entire project, I have taken the role of being the leader of the group. During our meetings I proposed and divided tasks among the members and took a leading role in organizing the content of our gatherings. I have also been the main contact person to communicate between the team and our supervisor Christian. Besides that I took on a big role in the writing part of the project. I wrote a major piece of the project proposal and adapted it to the feedback from Christian. Besides that I wrote the entire draft report together with Urban and also adapted it to Christian's feedback.
-
-When it comes to the technical aspects of the project, I have also made a handful of contributions. First of all I did extensive literature research about SENSEI and its relevant components being GPT-4, LLaVA, Motif and DreamerV3. But, I also educated myself about intrinsic motivation for RL in general. Of course, my teammates also did their own research. Besides that I took on the task of identifying all relevant files to replace GPT-4 with LLaVA and using image annotations to distill a reward function with Motif. Then, Yi Tjun and I took on the task of replacing GPT-4 with LLaVA by altering the code available in the Motif repository that was provided by our supervisor. At the same time, I took on the task to figure out how to distill a reward function using Motif in general, using GPT-4 image annotations that were also provided by Christian. After the previous two tasks were finally completed, I also generated the LLaVA image annotations and distilled them into a reward function together with Yi Tjun.
-
-#### Yitjun
-
-My main contribution was mainly on the technical aspect of the project. The main task I had was to adapt the Motif codebase to the open-source VLM LLaVa. Firstly, I conducted a thorough literature search on the general structure of SENSEI to understand the connectivity with the Motif. In addition, I read the Motif paper to gain a deeper insight about the Motif codebase itself. Afterwards, I started to set up the Motif codebase on Snellius and installed all the necessary packages needed for Motif and LLaVa in order to successfully execute the code. Max and I then took on the task by modifying the code in the Motif repository, provided by our supervisor, to replace GPT-4 with LLaVa. Furthermore, we also generated the LLaVa Image annotations (to obtain a dataset of preferences) and distilled them into a reward function. After completing these two tasks, the preference distribution was plotted between annotations for the three different VLMs (GPT-4, GPT-4 General, and LLaVa). Lastly, for the technical part, I cleaned up the Motif repository by removing all unnecessary files from the Motif repository and pushed the finalized code to Github.
-
-For the other deliverables, such as the project proposal and presentation, we contributed equally. For the final report, I mainly wrote the conclusion and future work sections. I also reviewed the entire report for technical, grammar and spelling errors and provided feedback to my team members on their contributions. Finally, in the ReadMe file, the installation instructions for Motif were written, as well as the section on running experiments, explaining how to annotate the data set with LLaVa and distill the reward function using Motif.
-
-#### Urban
-
-I made a lot of contributions in the deep learning 2 project, both in terms of coordinating, helping with the codebase and debugging, and writing. From the start, I made sure I understood the subject matter well, and looked into many possible extensions of the paper that we could take, taking into account the limited compute. I coordinated and met with our project supervisor Christian to collect the original SENSEI dataset (GPT-4 annotated image pairs) since it was too large to collect it online. Then, I helped map out the structure of the dataset (e.g. what the different labels meant, why there were sometimes three and sometimes four labels). I also together with Gilian tried to debug the cuda driver errors, ffmpeg errors, and compatibility issues. I also plotted the per-object interaction counts. Additionally, I actively coordinated with the team regarding what needs to be done, where help was needed, and served as a critical reviewer by proofreading the other team members' writing and suggested clarity improvements. Regarding the writing part, I contributed with all deliverables and wrote the entire draft report together with Max. Other deliverables for the course, such as the project proposal, project presentation, the final report version, and the readme file were equally divided between all group members. For those deliverables, my main focus was the introduction and previous work, and I also coordinated my work with the rest of the team, since some parts overlapped, especially in the presentation.
-
-#### Gilian
-
-My main focus during this project was adapting and using the previous Sensei Dreamer codebase for our project. This involved resolving pip-package
-version mismatches and outdated cuda drivers, fixing bugs in the previous code and actually running the dreamer agent with the new distilled reward
-function, Apart from this, I also created the layout / setup for the Read.me file. Additionally, I trimmed and refined the previous SENSEI codebase so
-that it can be included in our new public github repository.
-
-Other deliverables for this course, such as the project proposal, project presentation and the final report version were split up equally between our group members. For these deliverables, my main focus was the method and results.
-I also coordinated parts from the initial project proposal to make it a coherent proposal. This is because there was (before handing it in) a lot of overlap
-between the different sections each member wrote.
-
 # Codebase
 
 This codebase is comprised of two main components: `SENSEI` and `Motif`, each contained in their respective folders. Results for this experiment are contained in the `logdir` folder.
