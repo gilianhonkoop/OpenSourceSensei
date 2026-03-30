@@ -11,12 +11,9 @@ This paper builds forth upon [SENSEI](https://arxiv.org/pdf/2503.01584). It cove
 
 And to answer the following research questions:
 
-1. Does the distilled reward function Rψ from VLM anno-
-   tations encourage interesting behavior?
-2. Can SENSEI discover semantically meaningful behavior
-   during task-free exploration?
-3. Is the world model learned via exploration suitable for
-   later learning to efficiently solve downstream tasks?
+1. Does the distilled reward function Rψ from VLM annotations encourage interesting behavior?
+2. Can SENSEI discover semantically meaningful behavior during task-free exploration?
+3. Is the world model learned via exploration suitable for later learning to efficiently solve downstream tasks?
 
 ### Related work
 
